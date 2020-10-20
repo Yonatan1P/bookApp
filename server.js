@@ -21,7 +21,7 @@ app.set('view engine', 'ejs');
 
 
 app.get('/', (req, res) => {
-    console.log('yo');
+    res.render('pages/searches/new');
 });
 
 app.get('/hello', (req, res) => {
@@ -39,8 +39,8 @@ app.get('/searches/new', (req, res) => {
  // FUNCTIONS 
 
  function handleBooks(req, res) {
-     console.log(req.query);
-     const title = req.query.title;
+     console.log(req.body);
+     const title = req.body.title;
      const url = `https://www.googleapis.com/books/v1/volumes?q=+intitle:${title}`;
 
      superagent.get(url)
@@ -53,7 +53,7 @@ app.get('/searches/new', (req, res) => {
          res.render('pages/searches/show', {results : mapBooks});
      })
      .catch(error => {
-         console.log(error);
+        
         res.render('pages/error')
     });
  }

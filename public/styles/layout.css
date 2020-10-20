@@ -1,0 +1,24 @@
+h1{
+    display: flex;
+    justify-content: center;
+    font-size: 18pt;
+}
+input{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: .5vw;
+}
+legend{
+    display: flex;
+    padding-left: 48vw;
+    justify-content: center;
+}
+label{
+    padding: .5vw;
+}
+
+fieldset{
+    display: flex;
+    justify-content: center;
+}
