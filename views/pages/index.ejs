@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title> </title>
-        <link rel="stylesheet" href="/styles/reset.css">
-        <link rel="stylesheet" href="/styles/base.css">
-        <link rel="stylesheet" href="/styles/layout.css">
-        <link rel="stylesheet" href="/styles/modules.css">
+<%- include('../layout/head') %>
     </head>
     <body>
-        <h1> Hello World! </h1>
+        <%- include('../layout/header') %>
+        <h1> Index </h1>
+        <ul>
+            <% books.forEach(bookStuff => { %>
+                <li>
+                    <h3> <%= bookStuff.title %> - <%= bookStuff.author %></h3>
+
+                <img src='<%= bookStuff.image_url %>' alt=''>
+                
+            </li>
+           <% }) %>
+        </ul>
+        <h3> <%= books.length %></h3>
+        <%- include('../layout/footer') %>
     </body>
 <html>
+
