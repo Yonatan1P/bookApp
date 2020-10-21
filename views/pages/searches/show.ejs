@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('../../layout/head') %>
-    <body>
-        <h1> Hello World! </h1>
-        <% results.forEach(book => { %>
-            
+<body>
+    <%- include('../../layout/header') %>
+    <h1> Hello World! </h1>
+    <% results.forEach(book => { %>
+        <ul>
             <img src = "<%= book.img_url %>">
-            <p><%= book.title %></p>
-            <p><%= book.authors %></p>
+                <p><%= book.title %></p>
+                <p><%= book.authors %></p>
 
-            <form action="/books" method="POST">
-                <fieldset>
-                    <input type="hidden" name="title" placeholder="title name">
-                
-                    <button type="submit"> Save Book</button>
-                </fieldset>
-            </form>
-          <% }) %>
-    </body>
+                <form action="/books" method="POST">
+                    <fieldset>
+                        <input type="hidden" name="title" value ="<%= book.title %>" required>
+                        <input type="hidden" name="author" value ="<%= book.authors %>" required>
+                        <input type="hidden" name="description" value ="<%= book.description %>" required>
+                        <input type="hidden" name="image_url" value ="<%= book.img_url %>" required>
+                        <input type="hidden" name="isbn" value ="<%= book.isbn %>" required>
+                        <button type="submit"> Save Book</button>
+                    </fieldset>
+                </form>
+            </ul>
+            <% }) %>
+            <%- include('../../layout/footer') %>
+        </body>
 <html>

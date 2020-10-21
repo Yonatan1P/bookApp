@@ -21,6 +21,7 @@ app.set('view engine', 'ejs');
 app.get('/book/:id', oneBookDetails);
 app.get('/', getBooks);
 app.get('/searches/new', searchBooks);
+app.get('*', errorFunc);
 
 app.post('/books', newBook);
 app.post('/searches', handleBooks);
@@ -78,6 +79,7 @@ function getBooks (req, res) {
 }
 //client one book function
 function oneBookDetails (req, res) {
+    console.log(req.param.id)
     client.query('SELECT * FROM book WHERE id=$1;', [req.params.id])
         .then(singleResult => {
             res.render('pages/books/detail', {books: singleResult.rows[0]});
@@ -87,15 +89,15 @@ function oneBookDetails (req, res) {
 
 // client new book function
 function newBook (req, res) {
-    const {title, author, description, image_url, isbn} = JSON.parse(req.body);
+    const {title, author, description, image_url, isbn} = req.body;
     let sql = `INSERT INTO book (title, author, description, image_url, isbn) VALUES ($1, $2, $3, $4, $5) returning id`;
     let bookArr = [title, author, description, image_url, isbn];
     console.log(bookArr);
     client.query(sql, bookArr)
-        .then(response => {
-            console.log('hello');
-            console.log(response);
-            res.redirect('/detail');
+    .then(response => {
+        console.log('hello');
+        console.log(response);
+        res.redirect(`/book/${response.rows[0].id}`);
         })
         .catch(error => console.error(error));
 }
@@ -105,4 +107,7 @@ app.listen(PORT, () => {
     console.log(`server is up on ${PORT}`);
 });
 
-
+function errorFunc (error, res){
+    console.error(error)
+    res.render('pages/error', {error});
+}

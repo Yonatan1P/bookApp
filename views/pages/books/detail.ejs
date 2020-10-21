@@ -3,12 +3,13 @@
 <%- include('../../layout/head') %>
 <body>
     <%- include('../../layout/header') %>
-    <h1> <%= book.title %></h1>
-    <h1> <%= book.author %></h1>
-    <p> <%= book.description %></p>
-    <img src='<%= book.image_url %>' alt=''>
-    <p> <%= book.isbn %></p>
-    <p> Bookshelf:<%= book.genre %></p>
+    <h1> <%= books.title %></h1>
+    <h1> <%= books.author %></h1>
+    <p> <%= books.description %></p>
+    <img src='<%= books.image_url %>' alt=''>
+    <p> <%= books.isbn %></p>
+    <p> Bookshelf:<%= books.genre %></p>
 <%- include('../../layout/footer') %>
+<p><a href='/'> Return to Searches </a><p>
 </body>
 </html>
