@@ -1,0 +1,11 @@
+<form id= 'updating' action="/book/<%= books.id %>?_method=PUT" method="post">
+<input type="text" name="title" value="<%= books.title %>">
+<input type="text" name="author" value="<%= books.author %>">
+<input type="text" name="image_url" value="<%= books.image_url %>">
+<input type="text" name="isbn" value="<%= books.isbn %>">
+<input type="text" name="description" value="<%= books.description %>">
+<input type="submit" value="Update!">
+</form>
+<form action="/book/<%= books.id %>?_method=DELETE" method="post">
+    <input id='deleting' value='Delete' type="submit">
+</form>

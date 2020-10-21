@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const superagent = require('superagent');
 const express = require('express');
+const methodOverride = require('method-override');
 const app = express();
 const PORT = process.env.PORT || 3001;
 const cors = require('cors');
@@ -12,7 +13,7 @@ const pg = require('pg');
 const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 
-
+app.use(methodOverride('_method'));
 app.use(express.static('./public'));
 app.use(express.urlencoded({ extended: true }));
 
@@ -25,6 +26,12 @@ app.get('*', errorFunc);
 
 app.post('/books', newBook);
 app.post('/searches', handleBooks);
+
+// app.put
+app.put('/book/:id', updateBook);
+
+// app.delete
+app.delete('/book/:id', deleteBook);
 
 
  // FUNCTIONS 
@@ -43,10 +50,7 @@ app.post('/searches', handleBooks);
          });
          res.render('pages/searches/show', {results : mapBooks});
      })
-     .catch(error => {
-        
-        res.render('pages/error')
-    });
+     .catch(error => errorFunc(error, res));
  }
 
 function Books (book) {
@@ -79,27 +83,51 @@ function getBooks (req, res) {
 }
 //client one book function
 function oneBookDetails (req, res) {
-    console.log(req.param.id)
     client.query('SELECT * FROM book WHERE id=$1;', [req.params.id])
         .then(singleResult => {
+            console.log(singleResult);
             res.render('pages/books/detail', {books: singleResult.rows[0]});
         })
-        .catch(error => console.error(error));
+        .catch(error => errorFunc(error, res));
 }
 
 // client new book function
 function newBook (req, res) {
     const {title, author, description, image_url, isbn} = req.body;
+    console.log(author);
     let sql = `INSERT INTO book (title, author, description, image_url, isbn) VALUES ($1, $2, $3, $4, $5) returning id`;
     let bookArr = [title, author, description, image_url, isbn];
     console.log(bookArr);
     client.query(sql, bookArr)
     .then(response => {
-        console.log('hello');
-        console.log(response);
         res.redirect(`/book/${response.rows[0].id}`);
         })
-        .catch(error => console.error(error));
+        .catch(error => errorFunc(error, res));
+}
+
+// delete function that redirects to the homepage
+function deleteBook (req, res) {
+    let id = req.params.id;
+    let sqlDelete = 'DELETE FROM book WHERE id=$1';
+    client.query(sqlDelete, [id])
+        .then(() => {
+            res.redirect('/');
+        })
+        .catch(error => errorFunc(error, res));
+}
+
+// update function for books
+function updateBook (req, res) {
+    let {title, author, description, image_url, isbn} = req.body;
+    console.log(req.body, ('update book'));
+    let sqlUpdate = `UPDATE book SET title=$1, author=$2, description=$3, image_url=$4, isbn=$5 WHERE id=$6`;
+    let bookArr = [title, author, description, image_url, isbn, req.params.id];
+    console.log(bookArr);
+    client.query(sqlUpdate, bookArr)
+        .then(() => {
+            res.redirect(`/book/${req.params.id}`)
+        })
+        .catch(error => errorFunc(error, res));
 }
 
 
@@ -108,6 +136,5 @@ app.listen(PORT, () => {
 });
 
 function errorFunc (error, res){
-    console.error(error)
-    res.render('pages/error', {error});
+    res.render('pages/error', {error: 'server error'});
 }
